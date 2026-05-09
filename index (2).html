@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Login Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e8f0fe;
+      text-align: center;
+      margin-top: 60px;
+    }
+    .login-box {
+      background: white;
+      padding: 30px 25px;
+      width: 300px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0px 4px 16px rgba(0,0,0,0.12);
+    }
+    .login-box h2 {
+      margin: 0 0 6px;
+      color: #1a237e;
+      font-size: 20px;
+    }
+    .login-box p.subtitle {
+      color: #666;
+      font-size: 13px;
+      margin: 0 0 18px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #3949ab;
+    }
+    button {
+      padding: 11px;
+      width: 96%;
+      background-color: #3949ab;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+    button:disabled {
+      background-color: #9fa8da;
+      cursor: not-allowed;
+    }
+    #message {
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .attempts-left {
+      font-size: 12px;
+      color: #888;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-box">
+  <h2>&#127891; Student Login Portal</h2>
+  <p class="subtitle">West Visayas State University</p>
+  <input type="text" id="username" placeholder="Enter Username">
+  <input type="password" id="password" placeholder="Enter Password">
+  <button onclick="login()" id="loginBtn">Login</button>
+  <p id="message"></p>
+  <p class="attempts-left" id="attemptsInfo"></p>
+</div>
+
+<script>
+  var users = [
+    { username: "admin",    password: "1234" },
+    { username: "student1", password: "1111" },
+    { username: "student2", password: "2222" }
+  ];
+
+  var attemptsLeft = 3;
+  var locked = false;
+
+  function login() {
+    if (locked) return;
+
+    var user = document.getElementById("username").value.trim();
+    var pass = document.getElementById("password").value;
+    var msgEl = document.getElementById("message");
+    var infoEl = document.getElementById("attemptsInfo");
+
+    var match = null;
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].username === user && users[i].password === pass) {
+        match = users[i];
+        break;
+      }
+    }
+
+    if (match) {
+      msgEl.innerHTML = "Welcome, " + user + "!";
+      msgEl.style.color = "green";
+      infoEl.textContent = "";
+      document.getElementById("loginBtn").disabled = true;
+    } else {
+      attemptsLeft--;
+      if (attemptsLeft <= 0) {
+        locked = true;
+        msgEl.innerHTML = "Account Locked!";
+        msgEl.style.color = "#b71c1c";
+        infoEl.textContent = "Too many failed attempts.";
+        document.getElementById("loginBtn").disabled = true;
+        document.getElementById("username").disabled = true;
+        document.getElementById("password").disabled = true;
+      } else {
+        msgEl.innerHTML = "Invalid Username or Password!";
+        msgEl.style.color = "red";
+        infoEl.textContent = attemptsLeft + " attempt(s) remaining.";
+      }
+    }
+  }
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") login();
+  });
+</script>
+
+</body>
+</html>
